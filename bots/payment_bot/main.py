@@ -1,7 +1,22 @@
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
+import os
+import asyncio
+
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("✅ Payment bot is online.")
+
+
 async def main():
-    # placeholder for payment bot functionality
-    print("Payment bot is running")
+    token = os.environ.get("PAYMENT_BOT_TOKEN")
+    application = Application.builder().token(token).build()
+    application.add_handler(CommandHandler("start", start))
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling()
+    await application.updater.idle()
+
 
 if __name__ == "__main__":
-    import asyncio
     asyncio.run(main())
